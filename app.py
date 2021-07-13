@@ -44,23 +44,24 @@ def shorten():
 		return Response(status=400)
 	try:
 		sc = request.json['shortcode']
+
 		if not is_valid_short_code(sc):
 			return Response(status=412)
+
 		short_code = ShortCode.query.filter_by(short_code=sc).all()
-		print(short_code, file=sys.stdout)
 		if len(short_code) > 0:
 			return Response(status=409)
 		else:
 			short_code = ShortCode(short_code=sc, url=url)
+
 	except KeyError:
 		sc = ''.join(secrets.choice(alphabet) for i in range(6))
 		short_code = ShortCode(short_code=sc, url=url)
-	print(short_code.url, file=sys.stdout)
+
 	if short_code is not None:
 		db.session.add(short_code)
 		db.session.commit()
 
-	print("SC", sc, file=sys.stdout)
 	data = {"shortcode": sc}
 	return data, 201
 
