@@ -40,6 +40,9 @@ def is_valid_short_code(short_code):
 def get_shortcode(shortcode):
 	short_code = ShortCode.query.filter_by(short_code=shortcode).first()
 	if short_code is not None:
+		short_code.redirect_count += 1
+		short_code.last_redirect = datetime.datetime.now()
+		db.session.commit()
 		response = redirect(short_code.url)
 		return response
 	else:
