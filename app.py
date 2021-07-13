@@ -1,8 +1,6 @@
 import datetime
 import string
 import secrets
-import sys
-
 from flask import Flask, request, Response, redirect
 from flask_sqlalchemy import SQLAlchemy
 
@@ -39,14 +37,13 @@ def is_valid_short_code(short_code):
 def get_stats(shortcode):
     short_code = ShortCode.query.filter_by(short_code=shortcode).first()
     if short_code is not None:
-        print(type(short_code.last_redirect), file=sys.stdout)
         data = {"created": short_code.created.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
                 "lastRedirect": short_code.last_redirect.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
                 "redirectCount": short_code.redirect_count
                 }
         return data, 200
     else:
-        return Response(status=404)
+        return Response({}, status=404)
 
 
 @app.route("/<shortcode>", methods=["GET"])
@@ -59,7 +56,7 @@ def get_shortcode(shortcode):
         response = redirect(short_code.url)
         return response
     else:
-        return Response(status=404)
+        return Response({}, status=404)
 
 
 @app.route("/shorten", methods=["POST"])
@@ -67,16 +64,16 @@ def shorten():
     try:
         url = request.json['url']
     except KeyError:
-        return Response(status=400)
+        return Response({}, status=400)
     try:
         sc = request.json['shortcode']
 
         if not is_valid_short_code(sc):
-            return Response(status=412)
+            return Response({}, status=412)
 
         short_code = ShortCode.query.filter_by(short_code=sc).all()
         if len(short_code) > 0:
-            return Response(status=409)
+            return Response({}, status=409)
         else:
             short_code = ShortCode(short_code=sc, url=url)
 
@@ -84,9 +81,8 @@ def shorten():
         sc = ''.join(secrets.choice(alphabet) for i in range(6))
         short_code = ShortCode(short_code=sc, url=url)
 
-    if short_code is not None:
-        db.session.add(short_code)
-        db.session.commit()
+    db.session.add(short_code)
+    db.session.commit()
 
     data = {"shortcode": sc}
     return data, 201
