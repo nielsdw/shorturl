@@ -40,8 +40,8 @@ def get_stats(shortcode):
     short_code = ShortCode.query.filter_by(short_code=shortcode).first()
     if short_code is not None:
         print(type(short_code.last_redirect), file=sys.stdout)
-        data = {"created": short_code.created.strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "lastRedirect": short_code.last_redirect.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        data = {"created": short_code.created.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+                "lastRedirect": short_code.last_redirect.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
                 "redirectCount": short_code.redirect_count
                 }
         return data, 200
