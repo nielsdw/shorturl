@@ -2,7 +2,7 @@ import requests, json
 
 url = "http://localhost:5000/shorten"
 data = {"url": "https://www.energyworks.com/",
-	"shortcode": 'ggh3,'
+	"shortcode": 'ggh3_c'
 	}
 
 response = requests.post(url, json=data)
