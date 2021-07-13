@@ -7,7 +7,7 @@ import datetime
 import string
 import secrets
 
-db_path = '/tmp/test.db'
+db_path = 'test.db'
 db_uri = 'sqlite:///' + db_path
 
 app = Flask(__name__)
@@ -34,6 +34,16 @@ def is_valid_short_code(short_code):
 		if char not in alphabet:
 			return False
 	return True
+
+
+@app.route("/<shortcode>", methods=["GET"])
+def get_shortcode(shortcode):
+	short_code = ShortCode.query.filter_by(short_code=shortcode).first()
+	if short_code is not None:
+		response = redirect(short_code.url)
+		return response
+	else:
+		return Response(status=404)
 
 
 @app.route("/shorten", methods=["POST"])
