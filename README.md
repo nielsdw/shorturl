@@ -16,13 +16,13 @@ Create database:
 
 `python`
 
-`>>> from app import db`
+`>>> from app.app import db`
 
 `>>> db.create_all()`
 
 This makes the endpoints available for use
 
-`python app.py`
+`python app/app.py`
 
 This tests all the endpoints with different data as input
 
