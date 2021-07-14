@@ -1,4 +1,4 @@
-from flaskr.app import ShortCode, app, db
+from app.app import ShortCode, app, db
 
 
 def test_get_stats():
