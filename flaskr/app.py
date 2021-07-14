@@ -4,7 +4,7 @@ import secrets
 from flask import Flask, request, Response, redirect
 from flask_sqlalchemy import SQLAlchemy
 
-db_path = 'test.db'
+db_path = '../test.db'
 db_uri = 'sqlite:///' + db_path
 
 app = Flask(__name__)
