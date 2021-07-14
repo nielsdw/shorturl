@@ -11,5 +11,5 @@ def test_get_stats():
         response = test_client.get("/xxxxxx/stats")
         assert response.status_code == 200
         assert response.json["created"] is not None
-        response = test_client.get("/yyyyyy")
+        response = test_client.get("/x/stats")
         assert response.status_code == 404
