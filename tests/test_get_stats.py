@@ -13,4 +13,3 @@ def test_get_stats():
         response = test_client.get('/yyyyyy')
         assert response.status_code == 404
 
-
