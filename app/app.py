@@ -4,12 +4,14 @@ import secrets
 from flask import Flask, request, Response, redirect
 from flask_sqlalchemy import SQLAlchemy
 
-db_path = '../test.db'
-db_uri = 'sqlite:///' + db_path
+db_path = "../test.db"
+db_uri = "sqlite:///" + db_path
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # This suppresses some deprecation warning
+app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
+app.config[
+    "SQLALCHEMY_TRACK_MODIFICATIONS"
+] = False  # This suppresses some deprecation warning
 db = SQLAlchemy(app)
 
 alphabet = string.ascii_letters + string.digits + "_"
@@ -37,10 +39,11 @@ def is_valid_short_code(short_code):
 def get_stats(shortcode):
     short_code = ShortCode.query.filter_by(short_code=shortcode).first()
     if short_code is not None:
-        data = {"created": short_code.created.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
-                "lastRedirect": short_code.last_redirect.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
-                "redirectCount": short_code.redirect_count
-                }
+        data = {
+            "created": short_code.created.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+            "lastRedirect": short_code.last_redirect.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+            "redirectCount": short_code.redirect_count,
+        }
         return data, 200
     else:
         return Response({}, status=404)
@@ -62,11 +65,11 @@ def get_shortcode(shortcode):
 @app.route("/shorten", methods=["POST"])
 def shorten():
     try:
-        url = request.json['url']
+        url = request.json["url"]
     except KeyError:
         return Response({}, status=400)
     try:
-        sc = request.json['shortcode']
+        sc = request.json["shortcode"]
 
         if not is_valid_short_code(sc):
             return Response({}, status=412)
@@ -78,7 +81,7 @@ def shorten():
             short_code = ShortCode(short_code=sc, url=url)
 
     except KeyError:
-        sc = ''.join(secrets.choice(alphabet) for i in range(6))
+        sc = "".join(secrets.choice(alphabet) for i in range(6))
         short_code = ShortCode(short_code=sc, url=url)
 
     db.session.add(short_code)
