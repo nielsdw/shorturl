@@ -1,7 +1,7 @@
 import datetime
 import string
 import secrets
-from flask import Flask, request, Response, redirect
+from flask import Flask, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 
 db_path = "../test.db"
