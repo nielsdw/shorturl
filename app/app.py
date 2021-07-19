@@ -46,7 +46,7 @@ def get_stats(shortcode):
         }
         return data, 200
     else:
-        return Response({}, status=404)
+        return {}, 404
 
 
 @app.route("/<shortcode>", methods=["GET"])
@@ -59,7 +59,7 @@ def get_shortcode(shortcode):
         response = redirect(short_code.url)
         return response
     else:
-        return Response({}, status=404)
+        return {}, 404
 
 
 @app.route("/shorten", methods=["POST"])
@@ -67,16 +67,16 @@ def shorten():
     try:
         url = request.json["url"]
     except KeyError:
-        return Response({}, status=400)
+        return {}, 400
     try:
         sc = request.json["shortcode"]
 
         if not is_valid_short_code(sc):
-            return Response({}, status=412)
+            return {}, 412
 
         short_code = ShortCode.query.filter_by(short_code=sc).all()
         if len(short_code) > 0:
-            return Response({}, status=409)
+            return {}, 409
         else:
             short_code = ShortCode(short_code=sc, url=url)
 
